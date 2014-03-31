@@ -1,0 +1,157 @@
+//-------------------------------------------------------------------------
+
+- var EOL   = '\n'
+- var NL    = EOL
+- var SPACE = ' '
+
+//-------------------------------------------------------------------------
+
+- var jmix = {};
+
+//- Paths
+- jmix.base_path = '../'
+- jmix.img_path  = jmix.base_path + 'img/'
+- jmix.css_path  = jmix.base_path + 'css/'
+- jmix.js_path   = jmix.base_path + 'js/'
+
+//- Classes
+- jmix.active_class = 'active'
+- jmix.btn_class    = 'btn'
+
+//-------------------------------------------------------------------------
+
+-function rand(min, max){
+	-return Math.floor( Math.random() * (max - min + 1) + min )
+-}
+
+//-------------------------------------------------------------------------
+
+mixin block()
+	-var name = ''
+	if attributes.id
+		- name = '#' + attributes.id;
+	else
+		- name = '.' + attributes.class.join('.');
+	div(attributes=attributes)
+		block
+	!='<!-- ' + name + ' -->' + NL + NL
+
+//-------------------------------------------------------------------------
+
+mixin link(href)
+	if !attributes.href
+		- attributes.href = href ? href : '#'
+	a(attributes=attributes): block
+
+//-------------------------------------------------------------------------
+
+mixin css(files)
+	if typeof files == 'string'
+		- files = [files]
+	- each css in files
+		link(rel="stylesheet", href=jmix.css_path + css)
+
+//-------------------------------------------------------------------------
+
+mixin js(files)
+	if typeof files == 'string'
+		- files = [files]
+	- each js in files
+		script(type="text/javascript", src=jmix.js_path + js)
+
+//-------------------------------------------------------------------------
+
+mixin img(src)
+	- attributes.src = jmix.img_path + src
+	if !attributes.alt
+		- attributes.alt = ''
+	img(attributes=attributes)
+
+//-------------------------------------------------------------------------
+
+//- mixin text(name, placeholder)
+//- 	input(type="text", name=name, placeholder=placeholder, class=attributes.class)/
+
+//-------------------------------------------------------------------------
+
+//- mixin radio(name, value)
+//- 	value = value || null
+//- 	label
+//- 		input(type="radio", name=name, class=attributes.class, value=value)/
+//- 		+space
+//- 		block
+
+//- mixin radio_list(name, list)
+//- 		each title, index in list
+//- 			+radio(name, index): =title
+
+//-------------------------------------------------------------------------
+
+//- mixin submit(title)
+//- 	button(type="submit")= title
+
+//-------------------------------------------------------------------------
+
+//- mixin button(title)
+//- 	button= title
+
+//- mixin select(options)
+//- 	select(class=attributes.class)
+//- 		each title, index in options
+//- 			option(value=index): =title
+
+//-------------------------------------------------------------------------
+
+mixin list-menu(items, active)
+	- var active = active || 0
+	ul(attributes=attributes)
+		- each item,index in items
+			- var item_class = active==index || active==item ? jmix.active_class : null
+			- href = typeof index == 'integer' ? '#' : index
+			li(class=item_class): +link(href)=item
+
+//-------------------------------------------------------------------------
+
+mixin dl(dt, dd)
+	dl(attributes=attributes)
+		dt=dt
+		dd
+			=dd
+			block
+
+//-------------------------------------------------------------------------
+
+//- mixin icon(icon, suffix, prefix)
+//- 	if prefix
+//- 		=prefix + ' '
+//- 	i(class='icon -' + icon + ' ' + attributes.class)
+//- 	if suffix
+//- 		=' ' + suffix
+
+//-------------------------------------------------------------------------
+
+mixin lorem-img(width, height, theme, index, grey)
+	-var lorem_themes = ['abstract', 'animals', 'business', 'cats', 'city', 'food', 'nightlife', 'fashion', 'people', 'nature', 'sports', 'technics', 'transport']
+
+	-var src = []
+	if grey
+		-src.push('g')
+	-src.push(width)
+	-src.push(height ? height : width)
+	-src.push(theme || lorem_themes[rand(0, 12)])
+	-src.push(index || rand(0, 9))
+
+	-attributes.src = "http://lorempixel.com/" + src.join('/')
+	if !attributes.alt
+		attributes.alt = ''
+	img(attributes=attributes)
+
+//-------------------------------------------------------------------------
+
+mixin btn(href)
+	- attributes.class = jmix.btn_class + (attributes.class ? ' ' + attributes.class : '')
+	if !attributes.href
+		- attributes.href = href ? href : '#'
+	a(attributes=attributes): block
+
+//-------------------------------------------------------------------------
