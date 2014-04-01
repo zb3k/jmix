@@ -31,17 +31,18 @@ mixin block()
 	if attributes.id
 		- name = '#' + attributes.id;
 	else
-		- name = '.' + attributes.class.join('.');
-	div(attributes=attributes)
+		- name = ('.' + attributes.class).replace(' ', '.');
+	div()&attributes(attributes)
 		block
 	!='<!-- ' + name + ' -->' + NL + NL
 
 //-------------------------------------------------------------------------
 
 mixin link(href)
+
 	if !attributes.href
 		- attributes.href = href ? href : '#'
-	a(attributes=attributes): block
+	a()&attributes(attributes): block
 
 //-------------------------------------------------------------------------
 
@@ -65,7 +66,7 @@ mixin img(src)
 	- attributes.src = jmix.img_path + src
 	if !attributes.alt
 		- attributes.alt = ''
-	img(attributes=attributes)
+	img()&attributes(attributes)
 
 //-------------------------------------------------------------------------
 
@@ -104,7 +105,7 @@ mixin img(src)
 
 mixin list-menu(items, active)
 	- var active = active || 0
-	ul(attributes=attributes)
+	ul()&attributes(attributes)
 		- each item,index in items
 			- var item_class = active==index || active==item ? jmix.active_class : null
 			- href = typeof index == 'integer' ? '#' : index
@@ -113,7 +114,7 @@ mixin list-menu(items, active)
 //-------------------------------------------------------------------------
 
 mixin dl(dt, dd)
-	dl(attributes=attributes)
+	dl()&attributes(attributes)
 		dt=dt
 		dd
 			=dd
@@ -144,7 +145,7 @@ mixin lorem-img(width, height, theme, index, grey)
 	-attributes.src = "http://lorempixel.com/" + src.join('/')
 	if !attributes.alt
 		attributes.alt = ''
-	img(attributes=attributes)
+	img()&attributes(attributes)
 
 //-------------------------------------------------------------------------
 
@@ -152,6 +153,6 @@ mixin btn(href)
 	- attributes.class = jmix.btn_class + (attributes.class ? ' ' + attributes.class : '')
 	if !attributes.href
 		- attributes.href = href ? href : '#'
-	a(attributes=attributes): block
+	a()&attributes(attributes): block
 
 //-------------------------------------------------------------------------
