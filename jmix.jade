@@ -24,6 +24,12 @@
 	-return Math.floor( Math.random() * (max - min + 1) + min )
 -}
 
+-function jmix_path(path, prefix){
+	if path[0] == '/' || path.search(/^[a-z]+:\/\//) === 0
+		-return path
+	-return prefix + path
+-}
+
 //-------------------------------------------------------------------------
 
 mixin block()
@@ -50,7 +56,7 @@ mixin css(files)
 	if typeof files == 'string'
 		- files = [files]
 	- each css in files
-		link(rel="stylesheet", href=jmix.css_path + css)
+		link(rel="stylesheet", href=jmix_path(css, jmix.css_path))
 
 //-------------------------------------------------------------------------
 
@@ -58,12 +64,12 @@ mixin js(files)
 	if typeof files == 'string'
 		- files = [files]
 	- each js in files
-		script(type="text/javascript", src=jmix.js_path + js)
+		script(type="text/javascript", src=jmix_path(js, jmix.js_path))
 
 //-------------------------------------------------------------------------
 
 mixin img(src)
-	- attributes.src = jmix.img_path + src
+	- attributes.src = jmix_path(src, jmix.img_path)
 	if !attributes.alt
 		- attributes.alt = ''
 	img()&attributes(attributes)
