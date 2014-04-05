@@ -1,4 +1,5 @@
 //-------------------------------------------------------------------------
+block jmix
 
 - var EOL   = '\n'
 - var NL    = EOL
@@ -18,13 +19,37 @@
 - jmix.active_class = 'active'
 - jmix.btn_class    = 'btn'
 
+- jmix.assets     = {};
+- jmix.assets.js  = [];
+- jmix.assets.css = [];
+
+
 //-------------------------------------------------------------------------
 
--function rand(min, max){
+-function assets(assets) {
+	if assets
+		if typeof assets == 'string'
+			-assets = [assets]
+		each asset in assets
+			-jmix.assets[asset.search(/\.js$/)>0 ? 'js' : 'css'].push(asset)
+-}
+
+//-------------------------------------------------------------------------
+
+mixin assets(list)
+	-assets(list)
+	+css(jmix.assets.css)
+	+js(jmix.assets.js)
+
+//-------------------------------------------------------------------------
+
+-function rand(min, max) {
 	-return Math.floor( Math.random() * (max - min + 1) + min )
 -}
 
--function jmix_path(path, prefix){
+//-------------------------------------------------------------------------
+
+-function jmix_path(path, prefix) {
 	if path[0] == '/' || path.search(/^[a-z]+:\/\//) === 0
 		-return path
 	-return prefix + path
